@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE livre SYSTEM "file:/Users/siyuwang/Documents/TAL/M2/XML/livre.dtd">
+<!-- Exo test Cours1 Document structuré M2 TAL Siyu WANG -->
+<livre num="1">
+    <titre>Harry Potter and the philosopher's stone</titre>
+    <auteur>
+        <nom>J.K.Rowling</nom>
+        <age>54</age>
+        <anniversaire>31/07/1965</anniversaire>
+    </auteur>
+    <année_publication>1997</année_publication>
+    <genre num="1">Fantasie</genre>
+    <genre num="2">Fiction</genre>
+    <langue>Anglais</langue>
+    <info pages="232" ISBN="0-7475-3269-9"/>
+</livre>

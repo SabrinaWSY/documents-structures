@@ -1,0 +1,14 @@
+<!ATTLIST livre num CDATA #IMPLIED>
+<!ELEMENT livre (#PCDATA | titre | auteur | année_publication | genre | langue | info)*>
+<!ELEMENT titre (#PCDATA)>
+<!ELEMENT auteur (#PCDATA | nom | age | anniversaire)*>
+<!ELEMENT nom (#PCDATA)>
+<!ELEMENT age (#PCDATA)>
+<!ELEMENT anniversaire (#PCDATA)>
+<!ELEMENT année_publication (#PCDATA)>
+<!ELEMENT genre (#PCDATA)>
+<!ATTLIST genre num CDATA #IMPLIED>
+<!ELEMENT langue (#PCDATA)>
+<!ELEMENT info (#PCDATA)>
+<!ATTLIST info pages CDATA #IMPLIED>
+<!ATTLIST info ISBN CDATA #IMPLIED>
