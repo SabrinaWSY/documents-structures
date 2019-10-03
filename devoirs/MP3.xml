@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Exo mp3 Cours3 Document structuré M2 TAL Siyu WANG -->
+<!-- DTD, interne -->
+<!DOCTYPE Lecteur [
+<!ENTITY lecteur "MP3">
+<!ELEMENT Lecteur (article+)>
+<!ATTLIST article num CDATA #IMPLIED>
+<!ELEMENT article (#PCDATA|machine|marque|modele|prix|stockage)*>
+<!ELEMENT machine (#PCDATA)>
+<!ELEMENT marque (#PCDATA)>
+<!ELEMENT modele (#PCDATA)>
+<!ELEMENT prix (#PCDATA)>
+<!ELEMENT stockage (#PCDATA)>
+]>
+<Lecteur>
+    <article  num="1">
+        <machine>&lecteur;</machine>
+        <marque>Sony</marque>
+        <modele>Walkman</modele>
+        <prix>439,99€</prix>
+        <stockage>16 Go</stockage>
+    </article>
+    <article  num="2">
+        <machine>&lecteur;</machine>
+        <marque>Sony</marque>
+        <modele>NW-A45B</modele>
+        <prix>219,99€</prix>
+        <stockage>16 Go</stockage>
+    </article>
+    <article  num="3">
+        <machine>&lecteur;</machine>
+        <marque>Arbily</marque>
+        <modele>Bluetooth 4.1</modele>
+        <prix>36,99€</prix>
+        <stockage>16 Go</stockage>
+    </article>
+    <article  num="4">
+        <machine>&lecteur;</machine>
+        <marque>Sony</marque>
+        <modele>Walkman sport NWWS413</modele>
+        <prix>99,99€</prix>
+        <stockage>4 Go</stockage>
+    </article>
+    <article  num="5">
+        <machine>&lecteur;</machine>
+        <marque>Sony</marque>
+        <modele>NW-WS414B</modele>
+        <prix>119,99€</prix>
+        <stockage>8 Go</stockage>
+    </article>
+    
+</Lecteur>
