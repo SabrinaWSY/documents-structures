@@ -38,10 +38,12 @@ def extract_from_file(file_path, sep=';'):
 def write_output_file(titre, realisateur, adresse, organisme, type_tournage, arrondissement, date_debut, date_fin, xy, file):
     """ write an output file in xml format """
     with open(file,'w',encoding='utf-8') as xmlfile:
-        xmlfile.write("<Lieu_tournage_paris_2011>\n")
+        xmlfile.write("<!-- Exos XML 03/10/2019 Siyu WANG -->\n<Lieu_tournage_paris_2011>\n")
         i = 1
         while (i < len(titre)):
+            xmlfile.write(f"<lieu num='{i}'>\n")
             xmlfile.write(f"<titre>{titre[i]}</titre><réalisateur>{realisateur[i]}</réalisateur><adresse>{adresse[i]}</adresse><organisme>{organisme[i]}</organisme><type_tournage>{type_tournage[i]}</type_tournage><arrondissement>{arrondissement[i]}</arrondissement><date_debut>{date_debut[i]}</date_debut><date_fin>{date_fin[i]}</date_fin><xy>{xy[i]}</xy>\n")
+            xmlfile.write("</lieu>\n")
             i += 1
         xmlfile.write("</Lieu_tournage_paris_2011>")
 
