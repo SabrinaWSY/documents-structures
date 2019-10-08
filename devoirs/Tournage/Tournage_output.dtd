@@ -1,0 +1,11 @@
+<!-- Exos cours3 XML devoir pour 03/10/2019 Siyu WANG-->
+<!ELEMENT Lieu_tournage_paris_2011 (#PCDATA | titre | réalisateur | adresse | organisme | type_tournage | arrondissement | date_debut | date_fin | xy)*>
+<!ELEMENT titre (#PCDATA)>
+<!ELEMENT réalisateur (#PCDATA)>
+<!ELEMENT arrondissement (#PCDATA)>
+<!ELEMENT date_debut (#PCDATA)>
+<!ELEMENT adresse (#PCDATA)>
+<!ELEMENT organisme (#PCDATA)>
+<!ELEMENT date_fin (#PCDATA)>
+<!ELEMENT type_tournage (#PCDATA)>
+<!ELEMENT xy (#PCDATA)>
