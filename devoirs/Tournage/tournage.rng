@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="Lieu_tournage_paris_2011">
+            <oneOrMore>
+                <element name = "lieu">
+                    <attribute name="num"/>
+                    <element name="titre"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="réalisateur"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="adresse"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="organisme"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="type_tournage"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="arrondissement"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="date_debut"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="date_fin"><attribute name="vide"><empty></empty></attribute></element>
+                    <element name="xy"><attribute name="vide"><empty></empty></attribute></element>
+                </element>
+            </oneOrMore>
+        </element>
+    </start>
+</grammar>

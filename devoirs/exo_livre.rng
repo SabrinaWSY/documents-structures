@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="bibliothèque">
+            <oneOrMore>
+            <element name="etagere" >
+                <attribute name="type"/>
+                <oneOrMore>
+                <element name="livre">
+                    <attribute name="isbn"/>
+                    <attribute name="prix"/>
+                    <element name="titre">
+                        <attribute name="vide"><empty/></attribute>
+                    </element>
+                    <element name="auteur">
+                        <attribute name="prenom"/> 
+                        <attribute name="nom"/>
+                    </element>     
+                </element>
+            </oneOrMore>     
+            </element>
+            </oneOrMore>
+    </element>
+    </start>
+</grammar>
