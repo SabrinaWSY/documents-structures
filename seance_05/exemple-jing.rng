@@ -1,0 +1,8 @@
+<element name="book"
+    xmlns="http://relaxng.org/ns/structure/1.0">
+    <oneOrMore>
+        <element name="page">
+            <text/>
+        </element>
+    </oneOrMore>
+</element>

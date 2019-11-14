@@ -99,13 +99,13 @@ Bien que XML Schema est défini par le W3C et donc plus largement répandu, Rela
 ```
 
 ``` rng
-# Forme compacte sans patrons nommées (named patterns)
+# Forme compacte sans patrons nommés (named patterns)
 element book {
     element page { text }+
 }
 ```
 ``` rng
-# Forme compacte avec patrons nommées
+# Forme compacte avec patrons nommés
 start = element book { page+ }
 page = element page { text }
 ```
@@ -166,6 +166,32 @@ java -jar jing.jar -c book.rnc book.xml
 # Pour convertir
 # java -jar trang.jar -I [rng|rnc|dtd|xml] -O [rng|rnc|dtd|xsd] [input file name] [output file name]
 java -jar trang.jar -I dtd -O rng book.dtd book-trang.rng
+```
+
+---
+# RelaxNG - outils
+## Installation jing-trang
+
+Pour l'installation la variable d'environnement $JAVA_HOME est requise
+
+Vérifier que java est bien installé dans son environnement
+``` bash
+# MAC OS
+vim ~/.bash_profile
+export JAVA_HOME=$(/usr/libexec/java_home)
+source ~/.bash_profile
+
+# LINUX
+vim ~/.bash_profile
+export JAVA_HOME=/usr/lib/jvm/*-jdk
+source ~/.bash_profile
+
+# pour vérifier
+echo $JAVA_HOME
+
+# BASH UBUNTU
+# Bien installer JAVA dans le ubuntu
+sudo apt-get install default-jdk
 ```
 
 ---
@@ -443,10 +469,312 @@ Correction disponible dans le fichier `exercice-livres.rng`
 
 Reprendre le XML des tournages
 1. écrire le schéma RelaxNG au format XML
-2. puis sous la forme compacte
-3. déposer sur votre `github` dans le dossier `devoirs`
+2. déposer sur votre `github` dans le dossier `devoirs`
 
-Vérifier en utilisant la validité de votre schéma avec `Oxygen XML Editor` ou bien `jing`
+Vérifier la validité de votre schéma avec `Oxygen XML Editor` ou bien `jing`
+
+---
+# RelaxNG - Patrons nommés
+
+Définir des blocs d'éléments ou attributs dans un patron pour l'appeler ensuite
+
+Soulage l'écriture et améliore la lisibilité
+
+Le document commence par une racine `<grammar>` qui contient deux fils
+- `<start>` : élément unique
+- `<define name="">` : zéro ou plusieurs éléments
+
+```xml
+<grammar>
+    <start>
+        <element name="book">
+            <zeroOrMore>
+                <ref name="pageRef"/>
+            </zeroOrMore>
+        </element>
+    </start>
+    <define name="pageRef">
+        <element name="page">
+            <text/>
+        </element>
+    </define>
+</grammar>
+```
+
+---
+# RelaxNG - patrons nommés, suite
+
+On peut aussi écrire
+```xml
+<grammar>
+    <start>
+        <ref name="bookRef"/>
+    </start>
+
+    <define name="bookRef">
+        <element name="book">
+            <zeroOrMore>
+                <ref name="pageRef"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="pageRef">
+        <element name="page">
+            <text/>
+        </element>
+    </define>
+</grammar>
+```
+
+Les patrons peuvent être récursif à l'intérieur d'un élément
+
+---
+# RelaxNG - patrons nommés, suite
+
+## Exercice
+
+Ré-écrire notre grammaire rng des livres en utilisant les patrons nommés
+Correction dans le fichier
+```xml
+seance_05/exercice-livres-patronsNommes.rng
+```
+---
+# RelaxNG - les énumérations
+
+Contraindre des valeurs pour les éléments et/ou attributs en les énumérant
+
+Usage : dans une balise `<choice>` définir des `<value`>
+
+Les espaces sont normalisés par défaut donc `"  hello  " == "hello"`.
+ Si on veut outrepasser ce comportement, préciser `<value type="string|token">`
+
+```xml
+<elment name="genre">
+    <choice>
+        <value>sf</value>
+        <value>gothique</value>
+    </choice
+</element>
+
+<genre>sf</genre>        <!--valide-->
+<genre>policier</genre>  <!--invalide-->
+```
+
+```xml
+<attribute name="bacalaureat">
+    <choice>
+        <value>L</value>    <value>ES</value>    <value>S</value>
+    </choice
+</attribute>
+```
+
+---
+# RelaxNG - les listes
+
+Les listes définissent des suites de valeurs séparées par un espace blanc dans un élément/attribut
+
+Chaque valeur est listée à l'aide de l'élément `<list>` dans lequel on précisera le type de donnée attendu
+
+On peut employer les séquences, ou bien `<zeroOrMore>` et `<oneOrMore>`
+
+``` xml
+<vector>11.50 6.50</vector>
+
+<element name="vector">
+    <list>
+        <data type="float"/>
+        <data type="float"/>
+    </list>
+</element>
+<!-- ou bien (pas totalement équivalent) -->
+<element name="vector">
+    <list>
+        <oneOrMore>
+            <data type="float"/>
+        <oneOrMore>
+    </list>
+</element>
+```
+
+---
+# RelaxNG - Référence vers des patrons externes
+
+Supposons que l'on veuille inclure dans notre grammaire `exercice-livres.rng`, le patron externe définit dans `titre.rng`
+
+`<externalRef href=""/>` permet d'inclure la référence où est défini notre patron 
+
+```xml
+<!-- titre.rng -->
+<grammar>
+    <start>
+        <ref name="Titre"/>
+    </start>
+    <define name="Titre">
+        <element name="titre"><text/></element>
+    </define>
+</grammar>
+```
+
+```xml
+<!-- exercice-livres.rng -->
+<element name="etagere">
+    <externalRef href="titre.rng"/>
+</element>
+```
+
+---
+# RelaxNG - Combiner les définitions 
+
+Il est possible de définir les `<choice>` ou bien `<interleave>` dans des blocs séparés en utilisant `<define name="" combine='choice|interleave'>`
+```xml
+<element name="auteur">
+    <choice>
+      <group>
+        <attribute name="nom"/>
+        <attribute name="prenom"/>
+      </group>
+      <group>
+        <interleave>
+          <element name="nom"><text/></element>
+          <element name="prenom"><text/></element>
+        </interleave>
+      </group>
+    </choice>
+</element>
+```
+peut se ré-écrire de la façon suivante
+
+---
+# RelaxNG - Combiner les définitions 
+
+L'attribut `combine` prend pour valeur `choice` et les deux blocs sont définis
+
+```xml
+<define name="Auteur">
+    <element name="auteur">
+        <ref name="auteur.grp"/>
+    </element>
+</define>
+
+<define name="auteur.grp" combine="choice">
+    <attribute name="nom"/>
+    <attribute name="prenom"/>
+</define>
+<define name="auteur.grp" combine="choice">
+    <interleave>
+        <element name="nom">
+            <text/>
+        </element>
+        <element name="prenom">
+            <text/>
+        </element>
+    </interleave>
+</define>
+```
+
+Ici, `<interleave>` aurait pu être ré-écrit de cette manière également
+
+---
+# RelaxNG - Inclure une grammaire
+
+Il est aussi possible d'inclure une grammaire dans une autre avec l'élément `<include href="inline.rng"/>`
+Supposons que l'on veut inclure `auteur.rng` dans `exercice-livres.rng`
+
+⚠️  `<include>` permet de modifier les patrons alors que `<externalRef>` ne le permet pas
+
+```xml
+<racine>
+    <auteur>
+        <nom/>
+    </auteur>
+    <auteur>
+        <prenom/>
+    </auteur>
+</racine>
+```
+
+---
+# RelaxNG - Inclure une grammaire
+
+```xml
+<!-- exercice-livres.rng -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+    <include href="auteur.rng"/>
+
+    <start>
+        <element name="racine">
+            <oneOrMore>
+                <ref name="Auteur"/>
+            </oneOrMore>
+        </element>
+    </start>
+
+    <define name="Auteur">
+        <element name="auteur">
+                <ref name="auteur.contenu"/>
+        </element>
+    </define>
+
+    <define name="auteur.contenu" combine="choice">
+        <element name="nom">
+            <empty/>
+        </element>
+    </define>
+</grammar>
+```
+
+---
+# RelaxNG - Inclure une grammaire
+
+```xml
+<!-- auteur.rng -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+    <define name="auteur.contenu">
+        <element name="prenom">
+            <empty/>
+        </element>
+    </define>
+</grammar>
+```
+
+---
+# RelaxNG - Espaces de nom
+
+Les espaces de nom du document xml peuvent être spécifiés sur un `<element>` ou bien un `<attribut>` avec l'attribut `ns="URI"`
+
+Il peut être indiqué sur un élément, et ses enfants en hériteront
+
+```xml
+<element name="auteur" ns="mon-uri"><empty/></element>
+
+<!-- va matcher -->
+<auteur xmlns="mon-uri"/>
+<hello:auteur xmlns:hello="mon-uri"/>
+
+<!-- mais pas -->
+<auteur/>
+<auteur xmlns="URI-DIFFERENTE"/>
+```
+
+⚠️  Le préfixe n'est pas important, mais l'URI l'est
+
+---
+# RelaxNG - Les annotations
+
+Utile pour générer de la documentation tout au long du schéma
+
+Il faut inclure l'espace de nom `xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"`
+
+On appelle `<a:documentation> ... </a:documentation>` pour décrire ce que l'on veut, s'inclut dans un `<element>` ou bien `<attribut>`
+
+```xml
+<element name="auteur">
+    <a:documentation>Décrit l'élément auteur,
+                     contenant un attribut 'nom'</a:documentation>
+    <attribut name="nom"/>
+</element>
+```
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
