@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Documents Structurés</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Cours 06
+## XPATH
+### 14/11/2019
+
+---
+# XPATH
+
+Un langage de requêtes pour naviguer et interroger des documents XML en isolant des fragments
+
+Définit par le [W3C](https://www.w3.org/TR/xpath-31/)
+
+Il existe à ce jour trois versions majeures
+- 1.0 (1997)
+- 2.0 (2007)
+- 3.1 (2017)
+
+La version 1.0 la plus largement implémentée, mais nous verrons les versions 2.0 et 3.1
+
+S'utilise généralement avec XSLT, Xquery, les bases de données XML, les parsers XML
+
+---
+# XPATH - Nagivation
+
+Un document XML est représenté sous forme d'arbre, XPATH va nous permettre de nous y déplacer
+
+On parle `d'axes` pour désigner la préselection d'un certain nombre de noeuds
+Les `prédicats` sont des conditions pour les sélectionner
+
+La syntaxe est `axe::predicat[condition_sur_le_predicat]`
+
+---
+# XPATH - Les axes
+
+La liste des axes verticaux
+- child : les enfants du noeud courant
+- parent : le père du noeud courant
+- self : le noeud courant
+- attribute : les attributs de noeud courant
+- descendant : les enfants du noeud courant et leurs descendants
+- descendant-or-self : le noeud courant et tous ses descendants
+- ancestor : le père du noeud courant et ses ancêtres
+- ancestor-or-self : le noeud courant et tous ses ancêtres
+
+La liste des axes horizontaux
+- following : noeud frère suivant avec enfants sans ancêtre
+- following-sibling : noeud frère précédent sans enfants ni ancêtre
+- preceding : noeud frère précédent avec enfants sans ancêtre
+- preceding-sibling : noeud frère précédent sans enfants ni ancêtre
+
+---
+.center[![Visualisation graphique](./axes.gif)]
+
+Source: [https://nwalsh.com/docs/tutorials/xsl/xsl/foil22.html](https://nwalsh.com/docs/tutorials/xsl/xsl/foil22.html)
+
+---
+# Xpath - Exemple de syntaxe
+
+```xml
+<racine>
+    <auteur>
+        <nom id="007">Bond</nom>
+    </auteur>
+</racine>
+```
+
+1. Sélectionner le noeud `racine` : `racine` ou `/racine` ou `//racine`
+2. Sélectionner l'id du noeud `nom` : `racine/auteur/nom/@id` ou `racine/auteur/nom/attribute::id`
+3. Sélectionner le texte du noeud `nom` : //nom/text()
+4. Sélectionner le noeud `nom` qui a pour valeur d'attribut `id = 007` : `//nom[@id = '007']`
+
+---
+# Xpath - Abréviations
+
+Formes abrégrées
+
+- .     self::*
+- ..    parent::*
+- ./*   child::*
+- .//*  descendant::*
+- @id   attribute:id
+- /     la racine du document
+- //    position relative (par opposition à la position absolue)
+
+---
+# Xpath
+
+## Exercice
+
+A partir du fichier `juicers.xml`
+
+1. Sélectionner la racine du document
+2. Tous les noeuds `juicer`
+3. Tous les noeuds attributs de `juicer`
+4. Le texte des noeuds attributs de `juicer`
+5. Tous les enfants de `juicer`
+6. Tous les `juicer` qui ont un attribut `type="gear"`
+7. Le premier `juicer`
+8. Le dernier `juicer`
+9. La garantie pour le 2ième `juicer`
+10. Les `juicer` avec un `cost` inférieur à `100`$
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+
+
