@@ -1,0 +1,12 @@
+EXOS XPATH
+1. /
+2. //juicer
+3. //juicer/@*
+4. //juicer/@*/string()
+5. //juicer/*
+6. //juicer[@type="gear"]
+7. //juicer[1]
+8. //juicer[last()]
+9. //juicer[1]/warranty
+10. //juicer/cost[text()<100]
+	//juicer[cost<100]

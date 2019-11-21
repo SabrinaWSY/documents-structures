@@ -13,7 +13,7 @@
                     <attribute name="isbn"/>
                     <attribute name="prix"/>
                     <element name="titre">
-                        <attribute name="vide"><empty/></attribute>
+                        <text/>
                     </element>
                     <element name="auteur">
                         <attribute name="prenom"/> 
