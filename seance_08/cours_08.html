@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Documents Structurés</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Cours 08
+## XQUERY
+### 28/11/2019
+
+---
+# Xquery
+
+Un langage de programmation fonctionnel
+
+Les variables sont immuables (= on ne change pas leur état)
+
+Pas d'effet de bord sur les fonctions (= retourne toujours le même résultat si l'entrée ne change pas)
+
+Fait partie du W3C
+- Version 1.0, Janvier 2007
+- Version 3.0, Avril 2014
+- Version 3.1, Mars 2017
+
+Xpath est un subset de Xquery
+
+---
+# Xquery - syntaxe
+
+Déclaration d'une séquence, `( )`
+- `('a','b')`, `(1,2)`, ...
+
+Assignation d'une variable, `let $varName :=`
+- `let $a := 'A'`, `let $b := 1`
+
+Commenter, `(: un commentaire :)`
+
+Concaténation, `||`
+- `'a'||'b'`, `1||2`
+
+Application d'une fonction, `!`
+- `('Hello World', 'Bonjour Monde') ! tokenize(., ' ')`
+
+Chaîner des fonctions, `=>`
+- `tokenize('Hello World', ' ') => reverse() => string-join(';')`
+
+---
+# Xquery - FLOWR
+
+FLOWR (_flower_) expression
+```xquery
+for $x in (1 to 5)    (: Itération à travers une séquence :)
+let $mul := $x * 2    (: Assignation d'une variable :)
+where $x > 2          (: Filtre sur une condition :)
+order by $x mod 3     (: Ordonne les éléments :)
+return $x             (: Retourne le résultat :)
+
+(: Résultat : 3 5 4 :)
+```
+
+L'utilisation d'un `let` ou `for` entraîne l'obligation du `return`
+
+Les clauses `where` et `order` sont optionnelles
+
+``` xquery
+for $auteur in ('Marcel Arland', 'Jean Paulhan', 'Francis Ponge')
+return string-length($auteur)
+```
+
+``` xquery
+let $words := tokenize('Marcel Arland était à la NRF.', ' ')
+return $words
+```
+
+---
+# Xquery - FLOWR
+
+Il est aussi possible d'utiliser `xpath` dans une expression
+
+```xquery
+let $auteurs :=
+<auteurs>
+    <auteur prenom="Marcel">Arland</auteur>
+    <auteur prenom="Jean">Paulhan</auteur>
+    <auteur prenom="Francis">Ponge</auteur>
+</auteurs>
+for $auteur in $auteurs/auteur
+let $nom := $auteur/text()
+let $prenom := $auteur/@prenom
+return $nom ||', '||$prenom
+
+(: Arland, Marcel Paulhan, Jean Ponge, Francis :)
+```
+
+
+---
+# Xquery - FLOWR
+
+La clause `group by` permet de grouper selon une condition
+
+``` xquery
+let $auteurs :=
+<auteurs>
+    <auteur sexe='m' prenom="Marcel">Arland</auteur>
+    <auteur sexe='f' prenom="Marguerite">Yourcenar</auteur>
+    <auteur sexe='m' prenom="Jean">Paulhan</auteur>
+    <auteur sexe='m' prenom="Francis">Ponge</auteur>
+    <auteur sexe='f' prenom="Pauline">Réage</auteur>
+</auteurs>
+for $auteur in $auteurs/auteur
+let $nom := $auteur/text()
+let $sexe:= $auteur/@sexe
+group by $sexe
+return $nom
+
+(: Yourcenar Réage Arland Paulhan Ponge :)
+```
+
+---
+# Xquery - FLOWR
+
+Il est possible d'énumérer les résultats retournés avec `count`
+
+``` xml
+let $auteurs :=
+<auteurs>
+    <auteur sexe='m' prenom="Marcel">Arland</auteur>
+    <auteur sexe='f' prenom="Marguerite">Yourcenar</auteur>
+    <auteur sexe='m' prenom="Jean">Paulhan</auteur>
+    <auteur sexe='m' prenom="Francis">Ponge</auteur>
+    <auteur sexe='f' prenom="Pauline">Réage</auteur>
+</auteurs>
+for $auteur in $auteurs/auteur
+let $nom := $auteur/text()
+order by $nom
+count $num
+return $num||'.'||$nom
+
+(: 1.Arland 2.Paulhan 3.Ponge 4.Réage 5.Yourcenar :)
+```
+
+---
+# Xquery -- Comparaison
+
+La comparaison est aussi possibles
+
+- Comparer des valeurs : `eq, lt, le, gt, ge, ne`
+- Comparaison générale : `=, <, <=, >, >=, !=`
+- Comparer des noeuds : `is, <<, >>`
+
+``` xquery
+1 eq 1       (: true :)
+1 eq 2       (: false :)
+1 = (1,2)    (: true :)
+
+let $node :=
+<a>
+    <b/>
+    <c/>
+</a>
+$node/b << $node/c       (: true :)
+$node/b >> $node/c       (: false :)
+```
+
+---
+# Xquery -- Les conditions
+
+La syntaxe `if (condition) then ... else ...`
+
+À la différence des autres langages, l'instruction `else` est toujours requise
+
+```xquery
+for $i in (1 to 10)
+return if ($i mod 2 = 0) then $i else 'x'
+
+(: x 2 x 4 x 6 x 8 x 10 :)
+```
+
+---
+# Xquery - les fonctions
+
+Une fonction se déclare avec la syntaxe
+```
+declare function nomDeLaFonction() {};
+```
+
+Il est possible de typer les variables d'entrées et la valeur retournée ([Rappel des types](https://docs.oracle.com/cd/E13214_01/wli/docs92/xref/xqdtypes.html))
+
+``` xquery
+declare function local:bonjour($nom as xs:string) as xs:string {
+    "Bonjour, " || $nom
+};
+
+local:bonjour('Marcel') (: Bonjour Marcel :)
+```
+
+``` xquery
+(: Assignation d'une fonction anonyme
+   Ne marche pas avec Saxon HE ... :)
+let $bonjour := function ($nom as xs:string) { 'Bonjour, ' ||$nom}
+return $bonjour('Marcel') (: Bonjour, Marcel :)
+```
+
+---
+# Xquery - Espace de nom
+
+Pour déclarer un espace de nom
+
+``` xquery
+declare namespace tal="master-plurital";
+
+declare function tal:redouble($note as xs:integer) as xs:boolean {
+    $note < 10
+};
+
+tal:redouble(5) (: true :)
+```
+
+---
+# Xquery - Exemple
+
+Faire une requête pour retourner le nom des `juicer` contenu dans le document `juicers`
+```xquery
+let $document := fn:doc('file:///documents-structures/seance_06/juicers.xml')
+
+for $juicer in $document/juicers/juicer
+return $juicer/name/text()
+
+(: OJ Home JuicerChampion JuicerGreen ... :)
+```
+
+---
+# Xquery - Construire un document HTML
+
+Il est tout à fait possible de produire un résultat de sortie en HTML, en retournant
+des balises
+
+Les accolades `{}` nous servent à indiquer qu'il s'agit d'un résultat à interpréter
+
+``` xquery
+let $auteurs :=
+<auteurs>
+<auteur sexe='m' prenom="Marcel">Arland</auteur>
+<auteur sexe='f' prenom="Marguerite">Yourcenar</auteur>
+<auteur sexe='m' prenom="Jean">Paulhan</auteur>
+<auteur sexe='m' prenom="Francis">Ponge</auteur>
+<auteur sexe='f' prenom="Pauline">Réage</auteur>
+</auteurs>
+
+return <ul> {
+for $auteur in $auteurs/auteur
+return <li>$auteur</li>}
+</ul>
+
+(: Output le résultat dans une liste non ordonnée :)
+```
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+
+
