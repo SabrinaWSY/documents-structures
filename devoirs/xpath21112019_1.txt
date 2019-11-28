@@ -1,0 +1,8 @@
+1. //juicers/juicer[last()]
+2. //./description/ancestor::*[last()]
+3. count(//*)
+4. //*[count(child::*)>=2]
+5. //*[2]
+6. //name/following-sibling::*[1]/name()
+7. //text()[string-length()>140]
+8. //juicer/*[contains(text(),"html")]
